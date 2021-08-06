@@ -13,6 +13,10 @@
 <body>
 
 <div id="app" class="container">
+<div class="row">
+<div class="d-none d-md-block col-md-1"></div>
+<div class="col-12 col-md-10 px-0">
+
   <app-header :header="header"></app-header>
 
   <div class="bg-light px-2">
@@ -56,6 +60,10 @@
   </div>
 
   </div>
+
+</div>
+<div class="d-none d-md-block col-md-1"></div>
+</div>
 </div>
 
 <script>
@@ -100,7 +108,8 @@ app.component('app-header', {
 app.component('app-mob', {
   props: ['pos', 'mob', 'player'],
   template: `<div>
-              <span v-show="mob.pos != player.pos">{{ pos.find(x => x.id == mob.pos).t }} | </span> <a href="">{{ mob.title }}</a>
+              <span class="pr-1" v-show="mob.pos != player.pos">{{ pos.find(x => x.id == mob.pos).t }} |</span>
+              <a href="">{{ mob.title }}</a>
             </div>`
 })
 app.component('app-pos', {
