@@ -10,16 +10,16 @@
   <script src="https://unpkg.com/vue@3"></script>
 </head>
 
-<body>
+<body class="bg-light">
 
-<div id="app" class="container">
+<div id="app" class="container ">
 <div class="row">
 <div class="d-none d-md-block col-md-1"></div>
 <div class="col-12 col-md-10 px-0">
 
   <app-header :header="header"></app-header>
 
-  <div class="bg-light px-2">
+  <div class=" px-2">
 
   <div class="pt-2">
     Рюкзак &bull; Персонаж &bull; Магия
@@ -103,12 +103,12 @@ const app = Vue.createApp({
 
 app.component('app-header', {
   props: ['header'],
-  template: `<div class="bg-dark text-white px-2">- {{ header }} -</div>`
+  template: `<div class="bg-dark text-white p-2">- {{ header }} -</div>`
 })
 app.component('app-mob', {
   props: ['pos', 'mob', 'player'],
   template: `<div>
-              <span class="pr-1" v-show="mob.pos != player.pos">{{ pos.find(x => x.id == mob.pos).t }} |</span>
+              <span v-show="mob.pos != player.pos" class="pr-1">{{ pos.find(x => x.id == mob.pos).t }} |</span>
               <a href="">{{ mob.title }}</a>
             </div>`
 })
