@@ -13,8 +13,13 @@
 <body>
 
 <div id="app" class="container">
-  <div class="bg-dark text-white px-2">- Площадь Четырех Фонатов -</div>
+  <app-header v-bind:header="header"></app-header>
+
   <div class="bg-light px-2">
+
+  <div class="pt-2">
+    Рюкзак &bull; Персонаж &bull; Магия
+  </div>
     
   <div class="mt-2">
     Здоровье: 20/20
@@ -28,15 +33,19 @@
   </div>
 
   <div class="mt-2">
-    <a href="">серебрянная оправа</a>
-  </div>
-
-  <div class="mt-2">
     <a href="">Mapku3a *LosMagos*!!!!*</a>
   </div>
 
   <div class="mt-2">
-    <a href="">*</a> &bull; <a href="">c</a> &bull; <a href="">ю</a> &bull; <a href="">з</a> &bull; <a href="">в</a>
+    <app-mob v-for="(mob, index) in location.mobs" :mob="mob" :key="index" :player="player" :pos="app.pos"></app-mob>
+  </div>
+
+  <div class="mt-2">
+    <a href="">серебрянная оправа</a>
+  </div>
+
+  <div class="mt-2">
+    <app-pos :pos="app.pos" :player="player"></app-pos>
   </div>
 
   <div class="mt-2">
@@ -50,13 +59,52 @@
 </div>
 
 <script>
-Vue.createApp({
+const app = Vue.createApp({
   data() {
     return {
-      header: 'hello from vue'
+      header: 'Площадь Четырех Фонтанов',
+      app: {
+        pos: [
+          {id: 0, title: 'центр', t: '*'},
+          {id: 1, title: 'север', t: 'с'},
+          {id: 2, title: 'юг',    t: 'ю'},
+          {id: 3, title: 'запад', t: 'з'},
+          {id: 4, title: 'восток',t: 'в'}
+        ]
+      },
+      location: {
+        mobs: [
+          {title: 'паук', pos: 0},
+          {title: 'матерый волк', pos: 2},
+        ]
+      },
+      player: {
+        hmp: {hp_now: 30, hp_max: 30, mp_now: 10, mp_max: 10, fp_now: 0},
+        location: {pos: 0}
+      }
     }
   }
-}).mount('#app')
+})
+
+app.component('app-header', {
+  props: ['header'],
+  template: `<div class="bg-dark text-white px-2">- {{ header }} -</div>`
+})
+app.component('app-mob', {
+  props: ['pos', 'mob', 'player'],
+  template: `<div>
+              <span v-show="mob.pos != player.location.pos">{{ pos.find(x => x.id == mob.pos).t }} | </span> <a href="">{{ mob.title }}</a>
+            </div>`
+})
+app.component('app-pos', {
+  props: ['pos', 'player'],
+  template: `<span v-for="p in pos" :key="p.id">
+              <a href="" :class="{'text-dark': p.id == player.location.pos}" @click="changePos()">{{ p.t }}</a>
+              <span v-if="p.id != 4" class="px-1">|</span>
+            </span>`
+})
+
+app.mount('#app')
 </script>
 
 </body>
