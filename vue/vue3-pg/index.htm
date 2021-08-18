@@ -8,6 +8,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script src="https://unpkg.com/vue@3"></script>
+  <style>
+  .app-popover { cursor: pointer; color: blue; }
+  </style>
 </head>
 
 <body class="bg-light">
@@ -41,7 +44,7 @@
   </div>
 
   <div class="mt-2">
-    <app-mob v-for="(mob, index) in location.mobs" :mob="mob" :key="index" :player="player" :pos="app.pos"></app-mob>
+    <app-mob v-for="mob in location.mobs" :mob="mob" :key="mob.id" :player="player" :pos="app.pos"></app-mob>
   </div>
 
   <div class="mt-2">
@@ -82,22 +85,37 @@ const app = Vue.createApp({
       },
       location: {
         mobs: [
-          {title: 'паук', pos: 0},
-          {title: 'матерый волк', pos: 2},
+          {id: 1, title: 'паук', pos: 0},
+          {id: 2, title: 'матерый волк', pos: 2},
         ]
       },
       player: {
         hmp: {hp_now: 30, hp_max: 30, mp_now: 10, mp_max: 10, fp_now: 0},
         pos: 0,
-      }
+      },
+	  card: { title: null }
     }
+  },
+  mounted() {
+    // $('[data-toggle="popover"]').popover();
+    $("[data-toggle=popover]").popover({
+        html : true,
+        content: function() {
+            var content = $(this).attr("data-popover-content");
+            return $(content).children(".popover-body").html();
+        },
+        title: function() {
+            var title = $(this).attr("data-popover-content");
+            return $(title).children(".popover-heading").html();
+        }
+    });
   },
   methods: {
     changePos(aim, posId) {
       if(aim.pos === posId) return;
 
       aim.pos = posId;
-    } 
+    }
   }
 })
 
@@ -107,10 +125,22 @@ app.component('app-header', {
 })
 app.component('app-mob', {
   props: ['pos', 'mob', 'player'],
+  computed: {
+	  cardId() { return `app-card-mob-${this.mob.id}` }
+  },
   template: `<div>
               <span v-show="mob.pos != player.pos" class="pr-1">{{ pos.find(x => x.id == mob.pos).t }} |</span>
-              <a href="">{{ mob.title }}</a>
-            </div>`
+              <span class="app-popover" data-html="true" data-placement="right" :data-popover-content="'#'+cardId" data-toggle="popover" data-trigger="focus" href="#" tabindex="0">{{ mob.title }}</span>
+            </div>
+			
+			<div class="hidden d-none" :id="cardId">
+			  <div class="popover-heading">{{ mob.title }}</div>
+			  <div class="popover-body">
+				<a href="">Атаковать</a>
+				<br><a href="">Инфо</a>
+			  </div>
+			</div>
+			`
 })
 app.component('app-pos', {
   props: ['pos', 'player'],
@@ -124,4 +154,4 @@ app.mount('#app')
 </script>
 
 </body>
-</html
+</html>
